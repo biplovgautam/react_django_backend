@@ -1,6 +1,5 @@
 from django.db import models
 from .category import Category
-from rest_framework import serializers
 
 
 class Product(models.Model):
@@ -32,29 +31,3 @@ class ProductImage(models.Model):
         return f"Image for {self.product.name}"
 
 
-# Serializers within the same file
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductImage
-        fields = ["id", "image", "alt_text"]
-
-
-class ProductSerializer(serializers.ModelSerializer):
-    images = ProductImageSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Product
-        fields = [
-            "id",
-            "name",
-            "slug",
-            "description",
-            "price",
-            "stock",
-            "is_active",
-            "category",
-            "created_at",
-            "updated_at",
-            "image",
-            "images",
-        ]

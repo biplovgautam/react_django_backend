@@ -60,17 +60,3 @@ def update_order_total(sender, instance, **kwargs):
     order.save()
 
 
-from rest_framework import serializers
-from .products import Product
-
-class OrderItemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderItem
-        fields = ['id', 'product', 'quantity', 'price', 'discount', 'subtotal']
-
-class OrderSerializer(serializers.ModelSerializer):
-    items = OrderItemSerializer(many=True)  # Nested serializer for order items
-
-    class Meta:
-        model = Order
-        fields = ['id', 'user', 'status', 'created_at', 'updated_at', 'total_price', 'items']

@@ -5,13 +5,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
-
-
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _  # Import this
-
-
-from rest_framework import serializers
 
 
 
@@ -53,15 +48,6 @@ class CustomUser(AbstractUser):
     
     USERNAME_FIELD = 'email'  # Use email as the username
     REQUIRED_FIELDS = ['username','phone_number']  # No additional fields required
-
-class CustomUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = [
-            'email',
-            'phone_number',
-            'profile_photo',
-            ]
 
 
 User = get_user_model()
