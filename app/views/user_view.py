@@ -10,27 +10,20 @@ def register_user(request):
     """
     API view to register a new user.
     """
-    if request.method == 'POST':
-        serializer = CustomUserSerializer(data=request.data)
-        
-        if serializer.is_valid():
-            # Create the user using the validated data
-            user = serializer.save()
-            
-            # Optionally, you can set the password here before saving
-            # user.set_password(request.data['password'])  # if password handling needed separately
-            user.save()  # Save the user after setting password
+    serializer = CustomUserSerializer(data=request.data)
 
-            # Return success response with user data (but without the password)
-            return Response(
-                {
-                    "message": "User registered successfully.",
-                    "user": CustomUserSerializer(user).data
-                },
-                status=status.HTTP_201_CREATED
-            )
-        else:
-            return Response(
-                {"errors": serializer.errors},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+    if serializer.is_valid():
+        # Instead of using commit=False, directly create the user instance
+        user = serializer.create(serializer.validated_data)  # Create user without saving
+        user.set_password(request.data['password'])  # Hash the password
+        user.save()  # Now save the user
+
+        return Response(
+            {
+                "message": "User registered successfully.",
+                "user": CustomUserSerializer(user).data
+            },
+            status=status.HTTP_201_CREATED
+        )
+    else:
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

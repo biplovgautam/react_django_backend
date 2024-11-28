@@ -7,8 +7,20 @@ class CustomUserSerializer(serializers.ModelSerializer):
         fields = [
             'email',
             'phone_number',
-            'profile_photo',
+            'username',
+            'password',  # Make sure password is included for the user creation
         ]
+        extra_kwargs = {'password': {'write_only': True}}  # Ensure password is not returned in responses
+
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)  # Get password and remove it from validated_data
+        user = CustomUser.objects.create(**validated_data)  # Create user without password initially
+
+        if password:
+            user.set_password(password)  # Hash the password
+            user.save()  # Save the user with hashed password
+        
+        return user
 
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
