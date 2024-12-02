@@ -76,18 +76,25 @@ WSGI_APPLICATION = 'djangobackend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-import environ
+
 import os
+# Initialize environment variables
+import environ
 
 # Initialize environment variables
 env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+environ.Env.read_env()  # Reads the .env file
 
-# Database configuration
 DATABASES = {
-    'default': env.db('DATABASE_URL')
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('POSTGRES_DATABASE'),  # Database name
+        'USER': env('POSTGRES_USER'),      # Username
+        'PASSWORD': env('POSTGRES_PASSWORD'),  # Password
+        'HOST': env('POSTGRES_HOST', default='localhost'),  # Host
+        'PORT': env('POSTGRES_PORT', default='5432'),       # Port
+    }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
