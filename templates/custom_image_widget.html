@@ -1,0 +1,8 @@
+<!-- djangobackend/templates/custom_image_widget.html -->
+<div class="custom-image-widget">
+    <label for="{{ widget.name }}">{{ widget.label }}</label>
+    <input type="file" name="{{ widget.name }}" id="{{ widget.attrs.id }}">
+    {% if widget.is_image %}
+        <img src="data:image/jpeg;base64,{{ widget.value }}" alt="Current Image" style="max-width: 200px; max-height: 200px;">
+    {% endif %}
+</div>

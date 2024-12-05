@@ -13,7 +13,6 @@ class Product(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    image = models.ImageField(upload_to="product_images/", blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -30,7 +29,7 @@ class ProductImage(models.Model):
     product = models.ForeignKey(
         Product, related_name="images", on_delete=models.CASCADE
     )
-    image = models.ImageField(upload_to="product_images/")
+    image = models.BinaryField()
     alt_text = models.CharField(max_length=255, blank=True)
 
     def __str__(self):

@@ -28,9 +28,9 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(CustomUser, CustomUserAdmin)
-
 from django.contrib import admin
 from .models import Category, Product, ProductImage, ProductFeature
+from .forms import ProductImageForm
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -39,6 +39,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
+    form = ProductImageForm
     extra = 1
 
 class ProductFeatureInline(admin.TabularInline):
@@ -59,6 +60,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 # Register the ProductFeature model if you want to manage it separately
 admin.site.register(ProductFeature)
+admin.site.register(ProductImage)
 
 from django.contrib import admin
 from .models import Order, OrderItem
