@@ -76,24 +76,24 @@ WSGI_APPLICATION = 'djangobackend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
+# Add these at the top of your settings.py
+from dotenv import load_dotenv
+import dj_database_url
 import os
-# Initialize environment variables
-import environ
 
-# Initialize environment variables
-env = environ.Env()
-environ.Env.read_env()  # Reads the .env file
+# Load environment variables from .env file
+load_dotenv()
+
+# Parse database configuration from $DATABASE_URL
+database_url = os.environ.get('DATABASE_URL')
+print(f"DATABASE_URL: {database_url}")
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('POSTGRES_DATABASE'),  # Database name
-        'USER': env('POSTGRES_USER'),      # Username
-        'PASSWORD': env('POSTGRES_PASSWORD'),  # Password
-        'HOST': env('POSTGRES_HOST', default='localhost'),  # Host
-        'PORT': env('POSTGRES_PORT', default='5432'),       # Port
-    }
+    'default': dj_database_url.config(
+        default=database_url,
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 # Password validation
