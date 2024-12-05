@@ -30,26 +30,35 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 
 from django.contrib import admin
-from .models import Category, Product, ProductImage
-
+from .models import Category, Product, ProductImage, ProductFeature
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     list_display = ["name", "slug"]
 
-
 class ProductImageInline(admin.TabularInline):
     model = ProductImage
     extra = 1
 
+class ProductFeatureInline(admin.TabularInline):
+    model = ProductFeature
+    extra = 1
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
-    list_display = ["name", "category", "price", "stock", "is_active"]
-    list_filter = ["category", "is_active", "created_at"]
-    inlines = [ProductImageInline]
+    list_display = ["name", "get_categories", "price", "stock", "is_active"]
+    list_filter = ["categories", "is_active", "created_at"]
+    inlines = [ProductImageInline, ProductFeatureInline]
+    filter_horizontal = ('categories',)
+
+    def get_categories(self, obj):
+        return ", ".join([category.name for category in obj.categories.all()])
+    get_categories.short_description = 'Categories'
+
+# Register the ProductFeature model if you want to manage it separately
+admin.site.register(ProductFeature)
 
 from django.contrib import admin
 from .models import Order, OrderItem
